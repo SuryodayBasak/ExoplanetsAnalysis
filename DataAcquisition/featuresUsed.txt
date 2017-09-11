@@ -1,0 +1,53 @@
+P. Zone Class
+P. Mass Class
+P. Composition Class
+P. Atmosphere Class
+P. Habitable Class
+P. Min Mass (EU)
+P. Mass (EU)
+P. Max Mass (EU)
+P. Radius (EU)
+P. Density (EU)
+P. Gravity (EU)
+P. Esc Vel (EU)
+P. SFlux Min (EU)
+P. SFlux Mean (EU)
+P. SFlux Max (EU)
+P. Teq Min (K)
+P. Teq Mean (K)
+P. Teq Max (K)
+P. Ts Min (K)
+P. Ts Mean (K)
+P. Ts Max (K)
+P. Surf Press (EU)
+P. Mag
+P. Appar Size (deg)
+P. Period (days)
+P. Sem Major Axis (AU)
+P. Eccentricity
+P. Mean Distance (AU)
+P. Inclination (deg)
+P. Omega (deg)
+S. Type
+S. Mass (SU)
+S. Radius (SU)
+S. Teff (K)
+S. Luminosity (SU)
+S. [Fe/H]
+S. Age (Gyrs)
+S. Appar Mag
+S. Mag from Planet
+S. Size from Planet (deg)
+S. Hab Zone Min (AU)
+S. Hab Zone Max (AU)
+P. HZD
+P. HZC
+P. HZA
+P. HZI
+P. SPH
+P. Int ESI
+P. Surf ESI
+P. ESI
+S. HabCat
+P. Habitable
+P. Hab Moon
