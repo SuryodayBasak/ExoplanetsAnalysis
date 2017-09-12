@@ -5,7 +5,7 @@ import pandas as pd
 from io import StringIO
 import os
 import shutil
-import listOfFeatures
+import re
 
 class HECFeatures:
 	def __init__(self):
@@ -20,6 +20,12 @@ class HECFeatures:
 		
 class HECDataFrame:
 	def __init__(self):
+		
+		dirs_list = os.listdir('/')
+		if '_temp_' in dirs_list:
+			print('Existing _temp_ folder found. Removing it.')
+			shutil.rmtree('_temp_')
+			
 		print('Initializing data acquiring object.')
 		os.mkdir('_temp_')
 		url = 'http://www.hpcf.upr.edu/~abel/phl/phl_hec_all_confirmed.csv.zip'  
@@ -41,9 +47,21 @@ class HECDataFrame:
 		featuresList = HECFeatures()
 		print('Attempting to extract the data as required for ML analysis.')
 		try:
-			data = pd.read_csv('_temp_/phl_hec_all_confirmed.csv', usecols=featuresList.returnFeatureNames())
+			self.data = pd.read_csv('_temp_/phl_hec_all_confirmed.csv', usecols=featuresList.returnFeatureNames())
 			print('Data extraction successful.')
 		except:
 			print('An error occured while reading the required features from the catalog.')
 			shutil.rmtree('_temp_')
 		shutil.rmtree('_temp_')
+		
+	def extractRockyPlanets(self):
+		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class'].isin(['iron', 'rocky-iron', 'rocky-water'])]
+		print(self.rockyPlanetsDataFrame)
+		
+	def extractSamplesForML(self):
+		self.extractRockyPlanets()
+		self.samplesForML_unprocessed = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'].isin(['mesoplanet', 'psychroplanet', 'non-habitable'])]
+		print(self.samplesForML_unprocessed)
+
+testObj = HECDataFrame()
+testObj.extractSamplesForML()
