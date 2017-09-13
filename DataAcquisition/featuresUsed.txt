@@ -27,7 +27,6 @@ P. Eccentricity
 P. Mean Distance (AU)
 P. Inclination (deg)
 P. Omega (deg)
-S. Type
 S. Mass (SU)
 S. Radius (SU)
 S. Teff (K)

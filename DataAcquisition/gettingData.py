@@ -56,7 +56,7 @@ class HECDataFrame:
 		except:
 			print('An error occured while reading the required features from the catalog.')
 			shutil.rmtree('_exo_temp_')
-		shutil.rmtree('_exo_temp_')
+		#shutil.rmtree('_exo_temp_')
 		
 	def extractSamplesFromEachClass(self):
 		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class'].isin(['iron', 'rocky-iron', 'rocky-water'])]
@@ -70,41 +70,36 @@ class HECDataFrame:
 		self.psychroplanetSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'psychroplanet']
 		self.nonhabitableSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'non-habitable']
 		
-	def preprocessData(self):
-		self.extractSamplesFromEachClass()
-		_,missing_feature_indexes = np.where(pd.isnull(self.mesoplanetSamples_raw))
+	def preprocessData(self, classDataFrame):
+		_,missing_feature_indexes = np.where(pd.isnull(classDataFrame))
 		missing_feature_indexes = np.unique(missing_feature_indexes)
-		print(missing_feature_indexes)
 		
 		for column in missing_feature_indexes:
-			
-			feature_values = np.array(self.mesoplanetSamples_raw.ix[:,column])
-			print(feature_values, len(feature_values))
+			#print(column)
+			feature_values = np.array(classDataFrame.ix[:,column])
 			feature_values_not_null = feature_values[np.logical_not(np.isnan(feature_values))]
-			print(feature_values_not_null)
 			feature_mean_value = np.mean(feature_values_not_null)
-			print(feature_values, len(feature_values))
 			
 			nan_indexes = np.where(np.isnan(feature_values))
-			#feature_values[nan_indexes]=np.take(feature_mean_value,nan_indexes[1])
-			#feature_values[feature_values.isnan(print(feature_mean_value))] = feature_mean_value
-			#feature_values = [feature_mean_value for i in range(len(feature_values)) if np.isnan(feature_values[i]) == True]
 			for i in range(len(feature_values)):
 				if np.isnan(feature_values[i]):
 					feature_values[i] = feature_mean_value
-			print(feature_values)
-			print('------------------------')
+					
+			classDataFrame.ix[:,column] = feature_values
+		#print(classDataFrame.shape)
+		classDataFrame = classDataFrame.drop('P. Habitable Class', axis=1)
+		return classDataFrame
+		#print(classDataFrame)
+			
+	def returnPreprocessedData(self):
+		self.extractSamplesFromEachClass()
 		
-		
-		#print(self.mesoplanetSamples_raw)
-		#print(self.psychroplanetSamples_raw)
-		#print(self.nonhabitableSamples_raw)
-	
-	#def mapNumbersForFeatures(self):
-		
-	#print(self.mesoplanetSamples_raw)
-	#print(self.psychroplanetSamples_raw)
-	#print(self.nonhabitableSamples_raw)
+		self.nonhabitableSamples_preprocessed = pd.DataFrame(self.preprocessData(self.nonhabitableSamples_raw))
+		self.psychroplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.psychroplanetSamples_raw))
+		self.mesoplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.mesoplanetSamples_raw))
+
+		return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
 		
 testObj = HECDataFrame()
-testObj.preprocessData()
+nh, p, m = testObj.returnPreprocessedData()
+print(m)
