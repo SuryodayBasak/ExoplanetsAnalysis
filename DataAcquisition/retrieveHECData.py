@@ -56,7 +56,7 @@ class HECDataFrame:
 		except:
 			print('An error occured while reading the required features from the catalog.')
 			shutil.rmtree('_exo_temp_')
-		#shutil.rmtree('_exo_temp_')
+		shutil.rmtree('_exo_temp_')
 		
 	def extractSamplesFromEachClass(self):
 		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class'].isin(['iron', 'rocky-iron', 'rocky-water'])]
