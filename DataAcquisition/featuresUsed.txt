@@ -5,7 +5,6 @@ P. Atmosphere Class
 P. Habitable Class
 P. Min Mass (EU)
 P. Mass (EU)
-P. Max Mass (EU)
 P. Radius (EU)
 P. Density (EU)
 P. Gravity (EU)
@@ -45,9 +44,6 @@ P. HZC
 P. HZA
 P. HZI
 P. SPH
-P. Int ESI
-P. Surf ESI
 P. ESI
-S. HabCat
 P. Habitable
 P. Hab Moon
