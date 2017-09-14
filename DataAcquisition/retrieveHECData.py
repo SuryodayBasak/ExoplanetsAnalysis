@@ -1,3 +1,12 @@
+"""
+This is a module which can be used to automate the process of downloading
+and preprocessing the data of PHL-HEC. This will make the latest catalog
+available for ML analysis.
+
+The dataframes returned will be those of psychroplanets, mesoplanets, and
+non-habitable planets, of iron, rocky, and rocky-iron planets.
+"""
+
 import requests
 import sys
 import zipfile
