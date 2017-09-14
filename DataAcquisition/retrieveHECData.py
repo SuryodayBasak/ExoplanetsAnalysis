@@ -1,10 +1,12 @@
 """
+Author: Suryoday Basak
+
 This is a module which can be used to automate the process of downloading
 and preprocessing the data of PHL-HEC. This will make the latest catalog
 available for ML analysis.
 
 The dataframes returned will be those of psychroplanets, mesoplanets, and
-non-habitable planets, of iron, rocky, and rocky-iron planets.
+non-habitable planets, of iron, rocky, and rocky-water planets.
 """
 
 import requests
@@ -15,6 +17,10 @@ import os
 import shutil
 import numpy as np
 
+"""
+This class returns the features whose names are properly specified in a
+text file named 'featuresUsed.txt' in the same directory as this module.
+"""
 class HECFeatures:
 	def __init__(self):
 		self.feature_names = []
@@ -25,8 +31,26 @@ class HECFeatures:
 	
 	def returnFeatureNames(self):
 		return self.feature_names
-		
+
+"""
+This class creates an object which acquires data from the PHL-HEC catalog
+immediately upon execution and then extracts and preprocesses the data
+of psychroplanets, mesoplanets, and non-habitable planets, of rocky, iron,
+and rocky-water planets.
+"""
 class HECDataFrame:
+	"""
+	In this function, the following actions take place:
+	0. Dictionaries are defined here to map the categorical variables
+	to numerical variables for the features of zone-class, mass-class,
+	composition-class, and atmosphere-class of exoplanets.
+	1. A folder called '_exo_temp_' is created within the same directory.
+	If a folder by that name already exists, it is first deleted.
+	2. The .zip file containing the data in a CSV file is downloaded and
+	stored in _exo_temp_
+	3. The .zip file is extracted and the contents of the catalog are read.
+	4. The subdirectory '_exo_temp_' is then removed.
+	"""
 	def __init__(self):
 		
 		self.zoneClassDict = {'Hot':1.0, 'Warm':2.0, 'Cold':3.0}
@@ -66,7 +90,12 @@ class HECDataFrame:
 			print('An error occured while reading the required features from the catalog.')
 			shutil.rmtree('_exo_temp_')
 		shutil.rmtree('_exo_temp_')
-		
+	
+	"""
+	This function creates three dataframes, one for each class of interest,
+	and each frame will only contain samples of rocky, iron, and rocky-water
+	planets.
+	"""
 	def extractSamplesFromEachClass(self):
 		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class'].isin(['iron', 'rocky-iron', 'rocky-water'])]
 		
@@ -78,7 +107,12 @@ class HECDataFrame:
 		self.mesoplanetSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'mesoplanet']
 		self.psychroplanetSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'psychroplanet']
 		self.nonhabitableSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'non-habitable']
-		
+	
+	"""
+	In this function, all missing values of a certain class, whose dataframe
+	is passed as an argument, are handled by substituting the mean value
+	of the remaining feature values of the corresponding feature.
+	"""
 	def preprocessData(self, classDataFrame):
 		_,missing_feature_indexes = np.where(pd.isnull(classDataFrame))
 		missing_feature_indexes = np.unique(missing_feature_indexes)
@@ -100,6 +134,12 @@ class HECDataFrame:
 		return classDataFrame
 		#print(classDataFrame)
 			
+	"""
+	Only returnPreprocessedData() should be called from an object of class
+	HECDataFrame. Within this function, all the remaining functions are
+	appropriately executed. This function returns three frames with
+	preprocessed data of each class.
+	"""
 	def returnPreprocessedData(self):
 		self.extractSamplesFromEachClass()
 		
@@ -108,7 +148,8 @@ class HECDataFrame:
 		self.mesoplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.mesoplanetSamples_raw))
 
 		return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
-		
+
+#Some sample code
 testObj = HECDataFrame()
 nh, p, m = testObj.returnPreprocessedData()
-print(m)
+print(nh, p, m)
