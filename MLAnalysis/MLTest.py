@@ -53,13 +53,18 @@ algorithms = {
     #'XG Boost': XGBClassifier(**xgbparams)
 }
 
+algorithms = {
+    'Decision Trees': DecisionTreeClassifier(),
+    'Random Forests': RandomForestClassifier()
+}
+
 #Retrieving data from PHL-HEC
 data_object = retrieveHECData.HECDataFrame()
 data_object.populatePreprocessedData()
 
 for algo, clf in algorithms.items():
 	print('Testing', algo)
-	
+	iter_count = 0
 	for outer_iter in range(TOTAL_OUTER_ITERATIONS):
 		data_non_hab, data_psychro, data_meso = data_object.returnSubsamples()
 		
@@ -80,20 +85,24 @@ for algo, clf in algorithms.items():
 			train_meso_labels = [3 for x in range(len(train_meso))]
 			test_meso_labels = [3 for x in range(len(test_meso))]
 			
-			#print(train_meso_labels)
-			
 			#Creating training and testing sets
 			training_set = pd.concat([train_non_hab, train_psychro, train_meso])
+			training_set = training_set.values
 			test_set = pd.concat([test_non_hab, test_psychro, test_meso])
+			test_set = test_set.values
 			
 			
 			#Creating training and testing labels
 			training_labels = train_non_hab_labels + train_psychro_labels + train_meso_labels
 			test_labels = test_non_hab_labels + test_psychro_labels + test_meso_labels
 			
-			#print(len(training_set))
-			#print(len(training_labels))
-			#print(len(test_set))
-			#print(len(test_labels))
-			#print('-----')
-			#print(test_set)
+			#Building classifiers
+			try:
+				clf.fit(training_set, training_labels)
+				predicted_labels = clf.predict(test_set)
+				print(test_labels)
+				print(predicted_labels)
+				print('-----')
+			except:
+				pass
+

@@ -147,7 +147,9 @@ class HECDataFrame:
 		self.psychroplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.psychroplanetSamples_raw))
 		self.mesoplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.mesoplanetSamples_raw))
 		
-		self.BALANCE_NUMBER = min([len(self.nonhabitableSamples_preprocessed), len(self.psychroplanetSamples_preprocessed), len(self.mesoplanetSamples_preprocessed)])
+		self.BALANCE_NUMBER = min([len(self.nonhabitableSamples_preprocessed), 
+									len(self.psychroplanetSamples_preprocessed), 
+									len(self.mesoplanetSamples_preprocessed)])
 		#return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
 		
 	
