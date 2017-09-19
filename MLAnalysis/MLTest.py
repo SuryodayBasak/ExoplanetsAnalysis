@@ -24,6 +24,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from xgboost.sklearn import XGBClassifier
 from sklearn.metrics import confusion_matrix
+from sklearn.cross_validation import train_test_split
 
 # Here you specify the iterations. Lower it to test initially.
 TOTAL_OUTER_ITERATIONS = 20          # Outer iteration reshuffles the 1000 non hab.
@@ -63,4 +64,36 @@ for algo, clf in algorithms.items():
 		data_non_hab, data_psychro, data_meso = data_object.returnSubsamples()
 		
 		for inner_iter in range(TOTAL_INNER_ITERATIONS):
-			pass
+			
+			#Creating sets of class NON-HABITABLE
+			train_non_hab, test_non_hab = train_test_split(data_non_hab, test_size=0.2)
+			train_non_hab_labels = [1 for x in range(len(train_non_hab))]
+			test_non_hab_labels = [1 for x in range(len(test_non_hab))]
+			
+			#Creating sets of class PSYCHROPLANET
+			train_psychro, test_psychro = train_test_split(data_psychro, test_size=0.2)
+			train_psychro_labels = [2 for x in range(len(train_psychro))]
+			test_psychro_labels = [2 for x in range(len(test_psychro))]
+			
+			#Creating sets of class MESOPLANET
+			train_meso, test_meso = train_test_split(data_meso, test_size=0.2)
+			train_meso_labels = [3 for x in range(len(train_meso))]
+			test_meso_labels = [3 for x in range(len(test_meso))]
+			
+			#print(train_meso_labels)
+			
+			#Creating training and testing sets
+			training_set = pd.concat([train_non_hab, train_psychro, train_meso])
+			test_set = pd.concat([test_non_hab, test_psychro, test_meso])
+			
+			
+			#Creating training and testing labels
+			training_labels = train_non_hab_labels + train_psychro_labels + train_meso_labels
+			test_labels = test_non_hab_labels + test_psychro_labels + test_meso_labels
+			
+			#print(len(training_set))
+			#print(len(training_labels))
+			#print(len(test_set))
+			#print(len(test_labels))
+			#print('-----')
+			#print(test_set)
