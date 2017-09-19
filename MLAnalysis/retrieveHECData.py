@@ -140,16 +140,28 @@ class HECDataFrame:
 	appropriately executed. This function returns three frames with
 	preprocessed data of each class.
 	"""
-	def returnPreprocessedData(self):
+	def populatePreprocessedData(self):
 		self.extractSamplesFromEachClass()
 		
 		self.nonhabitableSamples_preprocessed = pd.DataFrame(self.preprocessData(self.nonhabitableSamples_raw))
 		self.psychroplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.psychroplanetSamples_raw))
 		self.mesoplanetSamples_preprocessed = pd.DataFrame(self.preprocessData(self.mesoplanetSamples_raw))
-
-		return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
+		
+		self.BALANCE_NUMBER = min([len(self.nonhabitableSamples_preprocessed), len(self.psychroplanetSamples_preprocessed), len(self.mesoplanetSamples_preprocessed)])
+		#return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
+		
+	
+	def returnSubsamples(self):
+		nh_subsample = self.nonhabitableSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
+		psychro_subsample = self.psychroplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
+		meso_subsample = self.mesoplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
+		return nh_subsample, psychro_subsample, meso_subsample
 
 #Some sample code
-testObj = HECDataFrame()
-nh, p, m = testObj.returnPreprocessedData()
-print(nh, p, m)
+#testObj = HECDataFrame()
+#testObj.populatePreprocessedData()
+#nh, p, m = testObj.returnSubsamples()
+#print(nh)
+#print(p)
+#print(m)
+#print(nh, p, m)
