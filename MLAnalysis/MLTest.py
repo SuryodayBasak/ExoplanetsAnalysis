@@ -27,8 +27,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.cross_validation import train_test_split
 
 # Here you specify the iterations. Lower it to test initially.
-TOTAL_OUTER_ITERATIONS = 20          # Outer iteration reshuffles the 1000 non hab.
-TOTAL_INNER_ITERATIONS = 100         # Inner iteration resplits the train and test sets.
+TOTAL_OUTER_ITERATIONS = 20 # Outer iteration reshuffles the 1000 non hab.
+TOTAL_INNER_ITERATIONS = 100 # Inner iteration resplits the train and test sets.
 
 """
 xgbparams = {
