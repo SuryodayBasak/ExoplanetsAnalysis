@@ -51,40 +51,53 @@ class HECDataFrame:
 	3. The .zip file is extracted and the contents of the catalog are read.
 	4. The subdirectory '_exo_temp_' is then removed.
 	"""
-	def __init__(self):
+	def __init__(self, download_new_flag = 1):
 		
 		self.zoneClassDict = {'Hot':1.0, 'Warm':2.0, 'Cold':3.0}
 		self.massClassDict = {'Mercurian':1.0, 'Subterran':2.0, 'Terran':3.0, 'Superterran':4.0, 'Neptunian':5.0, 'Jovian':6.0}
 		self.compClassDict = {'iron':1.0, 'rocky-iron':2.0, 'rocky-water':3.0}
 		self.atmoClassDict = {'none':1.0, 'metals-rich':2.0, 'hydrogen-rich':3.0}
 		
-		dirs_list = os.listdir()
-		if '_exo_temp_' in dirs_list:
-			print('Existing _exo_temp_ folder found. Removing it.')
-			shutil.rmtree('_exo_temp_')
+		if download_new_flag != 1:
+			print("Skipping data download")
+		
+		else:
+			dirs_list = os.listdir()
+			if '_exo_temp_' in dirs_list:
+				print('Existing _exo_temp_ folder found. Removing it.')
+				shutil.rmtree('_exo_temp_')
 			
-		print('Initializing data acquiring object.')
-		os.mkdir('_exo_temp_')
-		url = 'http://www.hpcf.upr.edu/~abel/phl/phl_hec_all_confirmed.csv.zip'  
-		print("Attempting to download dataset.")
-		r = requests.get(url)
+			print('Initializing data acquiring object.')
+			os.mkdir('_exo_temp_')
+			url = 'http://www.hpcf.upr.edu/~abel/phl/phl_hec_all_confirmed.csv.zip'  
+			print("Attempting to download dataset.")
+			r = requests.get(url)
 
-		try:
-			with open("_exo_temp_/source.zip", "wb") as code:
-				code.write(r.content)
-			archive = zipfile.ZipFile('_exo_temp_/source.zip', 'r')
-			archive.extractall('_exo_temp_')
-			print("Data retrieval successful.")
+			try:
+				with open("_exo_temp_/source.zip", "wb") as code:
+					code.write(r.content)
+				archive = zipfile.ZipFile('_exo_temp_/source.zip', 'r')
+				archive.extractall('_exo_temp_')
+				print("Data retrieval successful.")
+			
+				"""
+				Only if the data is successfully retreived, the files in
+				the _data_ folder will be replaced with the latest files.
+				The data file in the _data_ folder is the one which will 
+				be read and processed.
+				"""
+				os.rename("_exo_temp_", "_data_")
+			
 
-		except:
-			print("Error in downloading file!")
-			shutil.rmtree('_exo_temp_')
-			sys.exit(0)
+			except:
+				print("Error in downloading file!")
+				shutil.rmtree('_exo_temp_')
+				sys.exit(0)
 	
 		featuresList = HECFeatures()
 		print('Attempting to extract the data as required for ML analysis.')
 		try:
-			self.data = pd.read_csv('_exo_temp_/phl_hec_all_confirmed.csv', usecols=featuresList.returnFeatureNames())
+			self.data = pd.read_csv('_data_/phl_hec_all_confirmed.csv', usecols=featuresList.returnFeatureNames())
 			print('Data extraction successful.')
 		except:
 			print('An error occured while reading the required features from the catalog.')

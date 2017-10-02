@@ -59,7 +59,7 @@ algorithms = {
 }
 
 #Retrieving data from PHL-HEC
-data_object = retrieveHECData.HECDataFrame()
+data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
 data_object.populatePreprocessedData()
 
 for algo, clf in algorithms.items():
