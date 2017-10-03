@@ -3,12 +3,14 @@ import retrieveHECData
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
+"""
 ax = plt.gca()
 ax.cla()
 ax.set_aspect('equal')
-
-#data_object = retrieveHECData.HECDataFrame()
-#data_object.populatePreprocessedData()
+"""
+data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
+data_object.populatePreprocessedData()
+data_non_hab, data_psychro, data_meso = data_object.returnAllSamples()
 
 """
 Thermal Classification Scheme:
@@ -22,12 +24,26 @@ Thermal Classification Scheme:
 label the planet classes in colours
 plot vertical lines for class boundaries
 """
-#data_non_hab, data_psychro, data_meso = data_object.returnSubsamples()
+
+print(data_non_hab['P. Ts Mean (K)'])
+#bins = np.linspace(0, 500, 100)
+bins = np.linspace(200, 340, 40)
+plt.hist(data_non_hab['P. Ts Mean (K)'], bins, alpha=0.5, label='NH')
+plt.hist(data_psychro['P. Ts Mean (K)'], bins, alpha=0.5, label='P')
+plt.hist(data_meso['P. Ts Mean (K)'], bins, alpha=0.5, label='M')
+plt.legend(loc='upper right')
+plt.xlabel("Mean Surface Temperature (K)")
+plt.ylabel("Frequency of Occurrence")
+#plt.grid()
+plt.show()
+
+"""
 ax.set_xlim((-60, 100))
 plt.plot((-50, -50), (-10, 10), 'b-')
 plt.plot((0, 0), (-10, 10), 'g-')
 plt.plot((50, 50), (-10, 10), 'r-')
-plt.show() 
+"""
+#plt.show() 
 
 """
 Mass Classification Scheme:

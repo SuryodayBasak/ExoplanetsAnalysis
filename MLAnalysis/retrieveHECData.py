@@ -102,7 +102,7 @@ class HECDataFrame:
 		except:
 			print('An error occured while reading the required features from the catalog.')
 			shutil.rmtree('_exo_temp_')
-		shutil.rmtree('_exo_temp_')
+		#shutil.rmtree('_exo_temp_')
 	
 	"""
 	This function creates three dataframes, one for each class of interest,
@@ -165,7 +165,12 @@ class HECDataFrame:
 									len(self.mesoplanetSamples_preprocessed)])
 		#return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
 		
-	
+	def returnAllSamples(self):
+		nh_subsample = self.nonhabitableSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
+		psychro_subsample = self.psychroplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
+		meso_subsample = self.mesoplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
+		return self.nonhabitableSamples_preprocessed, self.psychroplanetSamples_preprocessed, self.mesoplanetSamples_preprocessed
+		
 	def returnSubsamples(self):
 		nh_subsample = self.nonhabitableSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
 		psychro_subsample = self.psychroplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
