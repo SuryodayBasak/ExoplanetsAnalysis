@@ -2,7 +2,9 @@ import pandas as pd
 import retrieveHECData 
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 plt.style.use('ggplot')
+figure = plt.figure()
 """
 ax = plt.gca()
 ax.cla()
@@ -25,7 +27,7 @@ label the planet classes in colours
 plot vertical lines for class boundaries
 """
 
-print(data_non_hab['P. Ts Mean (K)'])
+#print(data_non_hab['P. Ts Mean (K)'])
 #bins = np.linspace(0, 500, 100)
 bins = np.linspace(200, 340, 40)
 plt.hist(data_non_hab['P. Ts Mean (K)'], bins, alpha=0.5, label='NH')
@@ -60,6 +62,18 @@ label the planet classes in colours
 plot vertical lines for class boundaries
 """
 
+#print(data_non_hab['P. Ts Mean (K)'])~~~
+#bins = np.linspace(0, 500, 100)~~~
+bins = np.linspace(0, 28, 15)
+#plt.hist(data_non_hab['P. Mass (EU)'], bins, alpha=0.5, label='NH')~~~
+plt.hist(data_psychro['P. Mass (EU)'], bins, alpha=0.5, label='Psychroplanet')
+plt.hist(data_meso['P. Mass (EU)'], bins, alpha=0.5, label='Mesoplanet')
+plt.legend(loc='upper right')
+plt.xlabel("Mass of Planet")
+plt.ylabel("Frequency of Occurrence")
+#plt.grid()~~~
+plt.show()
+
 """
 Zone Class: Relate this to P. Habitable, P. Temp Mean
 
@@ -73,6 +87,68 @@ create the plot with P. Temp Mean as the X axis
 Just plot the points on X axis
 """
 
+#bins = np.linspace(0, 1, 3)
+#rows = np.random.choice(data_non_hab.index.values, 25)
+#nh_subsample = data_non_hab.ix[rows]
+#plt.hist(nh_subsample['P. Habitable'], bins, alpha=0.5, label='NH')
+#plt.hist(data_psychro['P. Habitable'], bins, alpha=0.5, label='Psychroplanet')
+#plt.hist(data_meso['P. Habitable'], bins, alpha=0.5, label='Mesoplanet')
+#plt.legend(loc='upper right')
+#plt.xlabel("Mass of Planet")
+#plt.ylabel("Frequency of Occurrence")
+#plt.show()
+
+"""
+nh_subsample = data_non_hab.ix[rows]
+zone1_nh = nh_subsample[nh_subsample['P. Zone Class'] == 1.0]
+zone2_nh = nh_subsample[nh_subsample['P. Zone Class'] == 2.0]
+zone3_nh = nh_subsample[nh_subsample['P. Zone Class'] == 3.0]
+"""
+
+"""
+zone1_nh = data_non_hab[data_non_hab['P. Zone Class'] == 1.0]
+zone2_nh = data_non_hab[data_non_hab['P. Zone Class'] == 2.0]
+zone3_nh = data_non_hab[data_non_hab['P. Zone Class'] == 3.0]
+
+zone1_p = data_psychro[data_psychro['P. Zone Class'] == 1.0]
+zone2_p = data_psychro[data_psychro['P. Zone Class'] == 2.0]
+zone3_p = data_psychro[data_psychro['P. Zone Class'] == 3.0]
+
+zone1_m = data_meso[data_meso['P. Zone Class'] == 1.0]
+zone2_m = data_meso[data_meso['P. Zone Class'] == 2.0]
+zone3_m = data_meso[data_meso['P. Zone Class'] == 3.0]
+"""
+"""
+zone1_nh
+zone2_nh
+zone2_p
+zone2_m
+zone3_nh
+"""
+
+#print(zone1['P. Ts Mean (K)'])
+#zone1_temp = zone1['P. Ts Mean (K)']
+#print(zone1_temp)
+#plt.plot(zone1_nh['P. Ts Mean (K)'],[0 for i in range(len(zone1_nh))],marker='o',linestyle='',color='r')
+"""
+plt.plot(zone2_nh['P. Ts Mean (K)'],[0 for i in range(len(zone2_nh))],marker='o',linestyle='',color='b')
+plt.plot(zone2_p['P. Ts Mean (K)'],[0 for i in range(len(zone2_p))],marker='o',linestyle='',color='g')
+plt.plot(zone2_m['P. Ts Mean (K)'],[0 for i in range(len(zone2_m))],marker='o',linestyle='',color='r')
+"""
+#plt.plot(zone3_nh['P. Ts Mean (K)'],[0 for i in range(len(zone3_nh))],marker='o',linestyle='',color='g')
+
+#print(zone3)
+#print(zone2)
+#print(zone3_nh)
+#print(zone2_p)
+#print(zone2_m)
+"""
+plt.legend(loc='upper right')
+plt.xlabel("Surface Temperature")
+#plt.ylabel("Frequency of Occurrence")
+plt.show()
+"""
+
 """
 Composition Class: S. Fe/H?
 
@@ -81,6 +157,18 @@ rocky-iron:2.0
 rocky-water:3.0
 """
 
+#print(data_non_hab['P. Ts Mean (K)'])~~~
+#bins = np.linspace(0, 500, 100)~~~
+bins = np.linspace(-1, 0.5, 20)
+#plt.hist(data_non_hab['S. [Fe/H]'], bins, alpha=0.5, label='NH')~~~
+plt.hist(data_psychro['S. [Fe/H]'], bins, alpha=0.5, label='Psychroplanet')
+plt.hist(data_meso['S. [Fe/H]'], bins, alpha=0.5, label='Mesoplanet')
+plt.legend(loc='upper right')
+plt.xlabel("S. Fe/H")
+plt.ylabel("Frequency of Occurrence")
+#plt.grid()~~~
+plt.show()
+
 """
 Atmosphere Classification: Relate with HZA
 
@@ -88,3 +176,13 @@ none:1.0
 metals-rich:2.0
 hydrogen-rich:3.0
 """
+#print(data_non_hab['P. Ts Mean (K)'])~~~
+bins = np.linspace(-1, 2.5, 20)
+#plt.hist(data_non_hab['P. HZA'], bins, alpha=0.5, label='NH')
+plt.hist(data_psychro['P. HZA'], bins, alpha=0.5, label='Psychroplanet')
+plt.hist(data_meso['P. HZA'], bins, alpha=0.5, label='Mesoplanet')
+plt.legend(loc='upper right')
+plt.xlabel("P. HZA")
+plt.ylabel("Frequency of Occurrence")
+#plt.grid()~~~
+plt.show()

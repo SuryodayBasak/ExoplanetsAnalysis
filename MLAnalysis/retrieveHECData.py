@@ -176,7 +176,8 @@ class HECDataFrame:
 		psychro_subsample = self.psychroplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
 		meso_subsample = self.mesoplanetSamples_preprocessed.sample(n=self.BALANCE_NUMBER)
 		return nh_subsample, psychro_subsample, meso_subsample
-
+	
+		
 #Some sample code
 #testObj = HECDataFrame()
 #testObj.populatePreprocessedData()
