@@ -71,12 +71,6 @@ class classificationScores:
 				
 			elif test_labels[i] == 3 and predicted_labels[i] == 3:
 				self.class3_3 += 1
-	
-			#print(test_labels)
-			#print(predicted_labels)
-			#print(self.class1_1, self.class1_2, self.class1_3)
-			#print(self.class2_1, self.class2_2, self.class2_3)
-			#print(self.class3_1, self.class3_2, self.class3_3)
 			
 	def displayConfusionMatrix(self):
 		class1 = [self.class1_1, self.class1_2, self.class1_3]
@@ -91,8 +85,8 @@ class classificationScores:
 		print(confusion_matrix)
 		
 # Here you specify the iterations. Lower it to test initially.
-TOTAL_OUTER_ITERATIONS = 20 # Outer iteration reshuffles the 1000 non hab.
-TOTAL_INNER_ITERATIONS = 100 # Inner iteration resplits the train and test sets.
+TOTAL_OUTER_ITERATIONS = 10 # Outer iteration reshuffles the 1000 non hab.
+TOTAL_INNER_ITERATIONS = 10 # Inner iteration resplits the train and test sets.
 
 """
 xgbparams = {
@@ -113,13 +107,17 @@ xgbparams = {
 # is used in a print statement so set whatever suits you.
 algorithms = {
     'Decision Trees': DecisionTreeClassifier(),
-    'Random Forests': RandomForestClassifier(),
+    'Random Forests': RandomForestClassifier()
     #'XG Boost': XGBClassifier(**xgbparams)
 }
 
 algorithms = {
     'Decision Trees': DecisionTreeClassifier(),
-    'Random Forests': RandomForestClassifier()
+    'Random Forests': RandomForestClassifier(),
+	'Gaussian Naive Bayes':GaussianNB(),
+    'Support Vector Machine':SVC(),
+    'Linear Discriminant Analysis':LinearDiscriminantAnalysis(),
+    'K Nearest Neighbors':KNeighborsClassifier()
 }
 
 #Retrieving data from PHL-HEC
@@ -155,7 +153,6 @@ for algo, clf in algorithms.items():
 			training_set = training_set.values
 			test_set = pd.concat([test_non_hab, test_psychro, test_meso])
 			test_set = test_set.values
-			
 			
 			#Creating training and testing labels
 			training_labels = train_non_hab_labels + train_psychro_labels + train_meso_labels
