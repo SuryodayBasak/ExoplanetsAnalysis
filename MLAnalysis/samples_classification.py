@@ -82,8 +82,12 @@ class classificationScores:
 		class1 = [self.class1_1, self.class1_2, self.class1_3]
 		class2 = [self.class2_1, self.class2_2, self.class2_3]
 		class3 = [self.class3_1, self.class3_2, self.class3_3]
-		confusion_matrix = [class1, class2, class3]
 		
+		class1 = [(x*100)/sum(class1) for x in class1]
+		class2 = [(x*100)/sum(class2) for x in class2]
+		class3 = [(x*100)/sum(class3) for x in class3]
+		
+		confusion_matrix = [class1, class2, class3]
 		print(confusion_matrix)
 		
 # Here you specify the iterations. Lower it to test initially.
