@@ -67,35 +67,35 @@ for algo, clf in algorithms.items():
 	iter_count = 0
 	for outer_iter in range(TOTAL_OUTER_ITERATIONS):
 		data_non_hab, data_psychro, data_meso = data_object.returnSubsamples()
-		
+
 		for inner_iter in range(TOTAL_INNER_ITERATIONS):
-			
+
 			#Creating sets of class NON-HABITABLE
 			train_non_hab, test_non_hab = train_test_split(data_non_hab, test_size=0.2)
 			train_non_hab_labels = [1 for x in range(len(train_non_hab))]
 			test_non_hab_labels = [1 for x in range(len(test_non_hab))]
-			
+
 			#Creating sets of class PSYCHROPLANET
 			train_psychro, test_psychro = train_test_split(data_psychro, test_size=0.2)
 			train_psychro_labels = [2 for x in range(len(train_psychro))]
 			test_psychro_labels = [2 for x in range(len(test_psychro))]
-			
+
 			#Creating sets of class MESOPLANET
 			train_meso, test_meso = train_test_split(data_meso, test_size=0.2)
 			train_meso_labels = [3 for x in range(len(train_meso))]
 			test_meso_labels = [3 for x in range(len(test_meso))]
-			
+
 			#Creating training and testing sets
 			training_set = pd.concat([train_non_hab, train_psychro, train_meso])
 			training_set = training_set.values
 			test_set = pd.concat([test_non_hab, test_psychro, test_meso])
 			test_set = test_set.values
-			
-			
+
+
 			#Creating training and testing labels
 			training_labels = train_non_hab_labels + train_psychro_labels + train_meso_labels
 			test_labels = test_non_hab_labels + test_psychro_labels + test_meso_labels
-			
+
 			#Building classifiers
 			try:
 				clf.fit(training_set, training_labels)
@@ -105,4 +105,3 @@ for algo, clf in algorithms.items():
 				print('-----')
 			except:
 				pass
-
