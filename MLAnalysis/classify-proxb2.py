@@ -70,62 +70,70 @@ test_planets_m = data_m[data_m['P. Name'].isin(planet_names)]
 train_planets_m = data_m[~data_m['P. Name'].isin(planet_names)]
 #print(test_planets_m)
 
+
+#Building test set
+test_nh_labels = [1 for x in range(len(test_planets_nh))]
+test_p_labels = [2 for x in range(len(test_planets_p))]
+test_m_labels = [3 for x in range(len(test_planets_m))]
+
+test_set = pd.concat([test_planets_nh, test_planets_p, test_planets_m])
+planet_names = test_set['P. Name'].tolist()
+test_set = test_set.drop('P. Name', axis=1)
+test_set = test_set.values
+test_labels = test_nh_labels + test_p_labels + test_m_labels
+
 for algo, clf in algorithms.items():
     accuracy = 0.0
     total_trials = 0.0
     print('Testing', algo)
     iter_count = 0
 
+    accuracy_1 = [0.0 for x in range(len(test_set))]
+    accuracy_2 = [0.0 for x in range(len(test_set))]
+    accuracy_3 = [0.0 for x in range(len(test_set))]
+    accuracy_o = [0.0 for x in range(len(test_set))]
+
     for outer_iter in range(TOTAL_OUTER_ITERATIONS):
         for inner_iter in range(TOTAL_INNER_ITERATIONS):
-            """
-            #Creating sets of class NON-HABITABLE
-            train_nh, test_nh = train_test_split(data_nh, test_size=0.2)
-            train_nh_labels = [1 for x in range(len(train_nh))]
-            test_nh_labels = [1 for x in range(len(test_nh))]
 
-            #Creating sets of class PSYCHROPLANET
-            train_p, test_p = train_test_split(data_p, test_size=0.2)
-            train_p_labels = [2 for x in range(len(train_p))]
-            test_p_labels = [2 for x in range(len(test_p))]
+            #Building training set
+            train_nh_sub = train_planets_nh.sample(n=120)
+            train_nh_labels = [1 for x in range(len(train_nh_sub))]
 
-            #Creating sets of class MESOPLANET
-            train_m, test_m = train_test_split(data_m, test_size=0.2)
-            train_m_labels = [3 for x in range(len(train_m))]
-            test_m_labels = [3 for x in range(len(test_m))]
+            train_p_sub = train_planets_p.sample(n=12)
+            train_p_labels = [2 for x in range(len(train_p_sub))]
 
-            #Creating training and testing sets
-            training_set = pd.concat([train_nh, train_p, train_m])
+            train_m_sub = train_planets_m.sample(n=12)
+            train_m_labels = [3 for x in range(len(train_m_sub))]
+
+            training_set = pd.concat([train_nh_sub, train_p_sub, train_m_sub])
+            training_set = training_set.drop('P. Name', axis=1)
             training_set = training_set.values
-
-            test_set = pd.concat([test_nh, test_p, test_m])
-            test_set = test_set.values
-
-            #Creating training and testing labels
             training_labels = train_nh_labels + train_p_labels + train_m_labels
-            test_labels = test_nh_labels + test_p_labels + test_m_labels
 
-            #Building classifiers
             clf.fit(training_set, training_labels)
-            try:
-                #print("HERE IS THE TRAINING SET")
-                #print(training_set)
-                clf.fit(training_set, training_labels)
-                predicted_labels = clf.predict(test_set)
-                #print('WE HERE')
-                #print(len(test_labels))
-                for i in range(len(test_labels)):
-                    total_trials += 1
-                    if predicted_labels[i] == test_labels[i]:
-                        accuracy += 1
-                        #print("Total Acc = ", accuracy)
-                        #print("Total try = ", total_trials)
-                #print('HERE')
-                #print(accuracy)
-                #print(total_trials)
+            predicted_labels = clf.predict(test_set)
 
-            except:
-                pass
-    accuracy = accuracy/total_trials
-    print('Accuracy = ', accuracy)
-    """
+            total_trials += 1
+            for i in range(len(predicted_labels)):
+
+                if predicted_labels[i] == test_labels[i]:
+                    accuracy_o[i] += 1
+
+                if predicted_labels[i] == 1:
+                    accuracy_1[i] += 1
+
+                elif predicted_labels[i] == 2:
+                    accuracy_2[i] += 1
+
+                elif predicted_labels[i] == 3:
+                    accuracy_3[i] += 1
+
+    #Generates LaTex table
+    print('P. Name && Non Habitable && Psychroplanet && Mesoplanet && Overall\\\\')
+    print('\hline')
+    for i in range(len(predicted_labels)):
+        print(planet_names[i], '&&', accuracy_1[i]*100/total_trials,
+        '&&', accuracy_2[i]*100/total_trials, '&&', accuracy_3[i]*100/total_trials,
+        '&&', accuracy_o[i]*100/total_trials, '\\\\')
+    print('\hline')

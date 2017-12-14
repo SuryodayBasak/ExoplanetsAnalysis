@@ -25,7 +25,9 @@ class HECFeatures:
 	def __init__(self):
 		self.feature_names = []
 		print('Collecting list of features.')
-		with open('featuresUsed.txt') as fp:
+		#with open('featuresUsed.txt') as fp:
+		#with open('featuresUsedExcTemp.txt') as fp:
+		with open('featuresUsedmr.txt') as fp:
 			for line in fp:
 				self.feature_names.append(line[:-1])
 
@@ -54,9 +56,11 @@ class HECDataFrame:
 	def __init__(self, download_new_flag = 1):
 
 		self.zoneClassDict = {'Hot':1.0, 'Warm':2.0, 'Cold':3.0}
-		self.massClassDict = {'Mercurian':1.0, 'Subterran':2.0, 'Terran':3.0, 'Superterran':4.0, 'Neptunian':5.0, 'Jovian':6.0}
+		self.massClassDict = {'Mercurian':1.0, 'Subterran':2.0, 'Terran':3.0,
+		'Superterran':4.0, 'Neptunian':5.0, 'Jovian':6.0}
 		self.compClassDict = {'iron':1.0, 'rocky-iron':2.0, 'rocky-water':3.0}
-		self.atmoClassDict = {'none':1.0, 'metals-rich':2.0, 'hydrogen-rich':3.0}
+		self.atmoClassDict = {'none':1.0, 'metals-rich':2.0,
+		'hydrogen-rich':3.0}
 
 		if download_new_flag != 1:
 			print("Skipping data download")
@@ -101,7 +105,8 @@ class HECDataFrame:
 		featuresList = HECFeatures()
 		print('Attempting to extract the data as required for ML analysis.')
 		try:
-			self.data = pd.read_csv('_data_/phl_hec_all_confirmed.csv', usecols=featuresList.returnFeatureNames(),skipinitialspace=True)
+			self.data = pd.read_csv('_data_/phl_hec_all_confirmed.csv',
+			usecols=featuresList.returnFeatureNames(),skipinitialspace=True)
 			print('Data extraction successful.')
 		except:
 			print('An error occured while reading the required features from the catalog.')
@@ -114,12 +119,29 @@ class HECDataFrame:
 	planets.
 	"""
 	def extractSamplesFromEachClass(self):
-		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class'].isin(['iron', 'rocky-iron', 'rocky-water'])]
+		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class']
+		.isin(['iron', 'rocky-iron', 'rocky-water'])]
+		self.rockyPlanetsDataFrame = self.rockyPlanetsDataFrame.drop(
+		'P. Composition Class', axis=1)
+		try:
+			self.rockyPlanetsDataFrame['P. Zone Class'] =  self.rockyPlanetsDataFrame['P. Zone Class'].map(self.zoneClassDict)
+		except:
+			print('Zone Class not found.')
 
-		self.rockyPlanetsDataFrame['P. Zone Class'] = self.rockyPlanetsDataFrame['P. Zone Class'].map(self.zoneClassDict)
-		self.rockyPlanetsDataFrame['P. Mass Class'] = self.rockyPlanetsDataFrame['P. Mass Class'].map(self.massClassDict)
-		self.rockyPlanetsDataFrame['P. Composition Class'] = self.rockyPlanetsDataFrame['P. Composition Class'].map(self.compClassDict)
-		self.rockyPlanetsDataFrame['P. Atmosphere Class'] = self.rockyPlanetsDataFrame['P. Atmosphere Class'].map(self.atmoClassDict)
+		try:
+			self.rockyPlanetsDataFrame['P. Mass Class'] = self.rockyPlanetsDataFrame['P. Mass Class'].map(self.massClassDict)
+		except:
+			print('Mass Class not found.')
+
+		try:
+			self.rockyPlanetsDataFrame['P. Composition Class'] = self.rockyPlanetsDataFrame['P. Composition Class'].map(self.compClassDict)
+		except:
+			print('Composition Class not found.')
+
+		try:
+			self.rockyPlanetsDataFrame['P. Atmosphere Class'] = self.rockyPlanetsDataFrame['P. Atmosphere Class'].map(self.atmoClassDict)
+		except:
+			print('Atmosphere Class not found.')
 
 		self.mesoplanetSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'mesoplanet']
 		self.psychroplanetSamples_raw = self.rockyPlanetsDataFrame[self.rockyPlanetsDataFrame['P. Habitable Class'] == 'psychroplanet']

@@ -1,0 +1,6 @@
+P. Name
+P. Composition Class
+P. Habitable Class
+P. Min Mass (EU)
+P. Mass (EU)
+P. Radius (EU)
