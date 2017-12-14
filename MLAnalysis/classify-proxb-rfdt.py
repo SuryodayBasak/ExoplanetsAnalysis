@@ -38,7 +38,7 @@ class TestPlanets:
 		return self.planet_names
 
 # Here you specify the iterations. Lower it to test initially.
-TOTAL_OUTER_ITERATIONS = 10 # Outer iteration reshuffles the 1000 non hab.
+TOTAL_OUTER_ITERATIONS = 100 # Outer iteration reshuffles the 1000 non hab.
 TOTAL_INNER_ITERATIONS = 10 # Inner iteration resplits the train and test sets.
 
 algorithms = {
@@ -97,7 +97,7 @@ for algo, clf in algorithms.items():
         for inner_iter in range(TOTAL_INNER_ITERATIONS):
 
             #Building training set
-            train_nh_sub = train_planets_nh.sample(n=120)
+            train_nh_sub = train_planets_nh.sample(n=1000)
             train_nh_labels = [1 for x in range(len(train_nh_sub))]
 
             train_p_sub = train_planets_p.sample(n=12)
@@ -130,10 +130,10 @@ for algo, clf in algorithms.items():
                     accuracy_3[i] += 1
 
     #Generates LaTex table
-    print('P. Name && Non Habitable && Psychroplanet && Mesoplanet && Overall\\\\')
+    print('P. Name & Non Habitable & Psychroplanet & Mesoplanet & Overall\\\\')
     print('\hline')
     for i in range(len(predicted_labels)):
-        print(planet_names[i], '&&', accuracy_1[i]*100/total_trials,
-        '&&', accuracy_2[i]*100/total_trials, '&&', accuracy_3[i]*100/total_trials,
-        '&&', accuracy_o[i]*100/total_trials, '\\\\')
+        print(planet_names[i], '&', accuracy_1[i]*100/total_trials,
+        '&', accuracy_2[i]*100/total_trials, '&', accuracy_3[i]*100/total_trials,
+        '&', accuracy_o[i]*100/total_trials, '\\\\')
     print('\hline')

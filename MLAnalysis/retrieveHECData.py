@@ -26,8 +26,8 @@ class HECFeatures:
 		self.feature_names = []
 		print('Collecting list of features.')
 		#with open('featuresUsed.txt') as fp:
-		#with open('featuresUsedExcTemp.txt') as fp:
-		with open('featuresUsedmr.txt') as fp:
+		with open('featuresUsedExcTemp.txt') as fp:
+		#with open('featuresUsedmr.txt') as fp:
 			for line in fp:
 				self.feature_names.append(line[:-1])
 
