@@ -26,8 +26,8 @@ class HECFeatures:
 		self.feature_names = []
 		print('Collecting list of features.')
 		#with open('featuresUsed.txt') as fp:
-		with open('featuresUsedExcTemp.txt') as fp:
-		#with open('featuresUsedmr.txt') as fp:
+		#with open('featuresUsedExcTemp.txt') as fp:
+		with open('featuresUsedmr.txt') as fp:
 			for line in fp:
 				self.feature_names.append(line[:-1])
 
@@ -58,7 +58,8 @@ class HECDataFrame:
 		self.zoneClassDict = {'Hot':1.0, 'Warm':2.0, 'Cold':3.0}
 		self.massClassDict = {'Mercurian':1.0, 'Subterran':2.0, 'Terran':3.0,
 		'Superterran':4.0, 'Neptunian':5.0, 'Jovian':6.0}
-		self.compClassDict = {'iron':1.0, 'rocky-iron':2.0, 'rocky-water':3.0}
+		self.compClassDict = {'iron':1.0, 'rocky-iron':2.0, 'rocky-water':3.0,
+		'gas':4.0, 'water-gas':5.0}
 		self.atmoClassDict = {'none':1.0, 'metals-rich':2.0,
 		'hydrogen-rich':3.0}
 
@@ -119,8 +120,10 @@ class HECDataFrame:
 	planets.
 	"""
 	def extractSamplesFromEachClass(self):
+		#self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class']
+		#.isin(['iron', 'rocky-iron', 'rocky-water'])]
 		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class']
-		.isin(['iron', 'rocky-iron', 'rocky-water'])]
+		.isin(['iron', 'rocky-iron', 'rocky-water', 'gas', 'water-gas'])]
 		self.rockyPlanetsDataFrame = self.rockyPlanetsDataFrame.drop(
 		'P. Composition Class', axis=1)
 		try:

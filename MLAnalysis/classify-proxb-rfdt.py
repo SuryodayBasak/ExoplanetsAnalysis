@@ -45,6 +45,9 @@ algorithms = {
     'Decision Trees': DecisionTreeClassifier(),
     'Random Forests': RandomForestClassifier()
 }
+algorithms = {
+    'Random Forests': RandomForestClassifier()
+}
 
 #Retrieving data from PHL-HEC
 data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
@@ -79,8 +82,12 @@ test_m_labels = [3 for x in range(len(test_planets_m))]
 test_set = pd.concat([test_planets_nh, test_planets_p, test_planets_m])
 planet_names = test_set['P. Name'].tolist()
 test_set = test_set.drop('P. Name', axis=1)
+f_names = test_set.columns.values.tolist()
+#print(test_set)
+#print(f_names)
 test_set = test_set.values
 test_labels = test_nh_labels + test_p_labels + test_m_labels
+_, n_features = test_set.shape
 
 for algo, clf in algorithms.items():
     accuracy = 0.0
@@ -88,6 +95,7 @@ for algo, clf in algorithms.items():
     print('Testing', algo)
     iter_count = 0
 
+    f_imp_list = [0.0 for x in range(n_features)]
     accuracy_1 = [0.0 for x in range(len(test_set))]
     accuracy_2 = [0.0 for x in range(len(test_set))]
     accuracy_3 = [0.0 for x in range(len(test_set))]
@@ -128,6 +136,20 @@ for algo, clf in algorithms.items():
 
                 elif predicted_labels[i] == 3:
                     accuracy_3[i] += 1
+            importances = clf.feature_importances_
+            #std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
+            #indices = np.argsort(importances)[::-1]
+            #print(importances)
+            for i in range(len(importances)):
+                f_imp_list[i] += importances[i]
+
+    print('Rank & Feature Name & Percentage Importance\\\\')
+    print('\hline')
+    indices = np.argsort(f_imp_list)[::-1]
+    for f in range(n_features):
+        #print("%d. feature %s (%f)" % (f + 1, f_names[f], f_imp_list[indices[f]]/total_trials))
+        print(f+1,'&',f_names[f],'&',f_imp_list[indices[f]]*100/total_trials,'\\\\')
+    print('\hline')
 
     #Generates LaTex table
     print('P. Name & Non Habitable & Psychroplanet & Mesoplanet & Overall\\\\')
