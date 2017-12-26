@@ -3,6 +3,7 @@ import csv
 import numpy as np
 import pandas as pd
 from scipy.stats.stats import pearsonr
+import matplotlib.pyplot as plt
 
 cdhs = pd.read_csv('catalogs/cdhs.csv')
 esi = pd.read_csv('_data_/phl_hec_all_confirmed.csv',
@@ -37,3 +38,11 @@ print('CDHS-drs and ESI &', drs_c, '\\\\')
 print('CDHS-crs (normalaized) and ESI &', ncrs_c, '\\\\')
 print('CDHS-drs (normalaized) and ESI &', ndrs_c, '\\\\')
 print('-------------------')
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+#ax.plot(gamma, delta, cdhs, c='r')
+ax.scatter(merged_catalogs['P. ESI'], merged_catalogs['DRS_Yscore'], marker = 'o')
+ax.set_xlabel('ESI')
+ax.set_ylabel('CDHS')
+plt.show()
