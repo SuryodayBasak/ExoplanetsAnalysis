@@ -6,24 +6,30 @@ gamma = 0.01
 delta = 0.01
 rate = 0.001
 
-LL = 0.01
+LL = 0.0
 UL = 1.0
 count = 0
 
-R = 19.04
-D = 0.64
-T = 11.1
-V = 34.2
+
+R = 1.99
+D = 1.03
+T = 1833.5/288
+V = 2.02
 
 while (alpha < UL and
+        alpha > LL and
         beta < UL and
+        beta > LL and
         gamma < UL and
+        gamma > LL and
         delta < UL and
+        delta > LL and
         alpha + beta + gamma + delta <UL):
-    alpha = alpha + rate*(1/R)
-    beta = beta + rate*(1/D)
-    gamma = gamma + rate*(1/T)
-    delta = delta + rate*(1/V)
+
+    alpha = alpha + rate*(np.log(R)*(R**alpha)*(D**beta)*(T**gamma)*(V**delta))
+    beta = beta + rate*(np.log(D)*(R**alpha)*(D**beta)*(T**gamma)*(V**delta))
+    gamma = gamma + rate*(np.log(T)*(R**alpha)*(D**beta)*(T**gamma)*(V**delta))
+    delta = delta + rate*(np.log(V)*(R**alpha)*(D**beta)*(T**gamma)*(V**delta))
     print(alpha, beta, gamma, delta)
 
 CDHS = (R**alpha)*(D**beta)*(T**gamma)*(V**delta)
