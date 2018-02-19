@@ -32,7 +32,7 @@ TOTAL_OUTER_ITERATIONS = 100 # Outer iteration reshuffles the 1000 non hab.
 TOTAL_INNER_ITERATIONS = 10 # Inner iteration resplits the train and test sets.
 
 #Retrieving data from PHL-HEC
-data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
+data_object = retrieveHECData.HECDataFrame(download_new_flag = 1)
 data_object.populatePreprocessedData()
 test_planets = TestPlanets()
 planet_names = test_planets.returnPlanetNames()
@@ -42,6 +42,8 @@ data_nh, data_p, data_m = data_object.returnAllSamples()
 #print(data_nh)
 #print('Searching in NH')
 test_planets_nh = data_nh[data_nh['P. Name'].isin(planet_names)]
+#print(test_planets_nh)
+#print(len(data_nh))
 train_planets_nh = data_nh[~data_nh['P. Name'].isin(planet_names)]
 #print(test_planets_nh)
 
@@ -62,6 +64,8 @@ test_p_labels = [1 for x in range(len(test_planets_p))]
 test_m_labels = [2 for x in range(len(test_planets_m))]
 
 test_set = pd.concat([test_planets_nh, test_planets_p, test_planets_m])
+#print(test_set)
+
 planet_names = test_set['P. Name'].tolist()
 test_set = test_set.drop('P. Name', axis=1)
 test_set = test_set.values
@@ -79,7 +83,7 @@ accuracy_o = [0.0 for x in range(len(test_set))]
 for outer_iter in range(TOTAL_OUTER_ITERATIONS):
     for inner_iter in range(TOTAL_INNER_ITERATIONS):
         #Building training set
-        train_nh_sub = train_planets_nh.sample(n=1500)
+        train_nh_sub = train_planets_nh.sample(n=600)
         train_nh_labels = [0 for x in range(len(train_nh_sub))]
 
         train_p_sub = train_planets_p.sample(n=12)

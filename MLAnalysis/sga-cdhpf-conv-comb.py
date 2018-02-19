@@ -2,6 +2,7 @@ import numpy as np
 from random import randint
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+#plt.style.use('ggplot')
 
 def sga(rate, a1, a2, F1, F2, UL):
     LL = 0.001
@@ -17,20 +18,22 @@ def sga(rate, a1, a2, F1, F2, UL):
             a1 = a1 + rate*(np.log(F1)*(F1**a1)*(F2**a2))
             a2 = a2 + rate*(np.log(F2)*(F1**a1)*(F2**a2))
 
+            #print(rate)
             dec = (randint(0,100)/100000000)
             if rate -  dec > 0:
-                rate = rate - (randint(0,100)/100000000)
+                rate = rate - (randint(0,10000)/100000000)
             #print(alph, bet, gam, delt, rate)
             count += 1
 
     cdhsx = (F1**a1)*(F2**a2)
     return a1, a2, rate, cdhsx
 
-R = 1.99
-D = 1.03
-T = 1833.5/288
+R = 5
+D = 5
+T = 5
+#T = 396.5/288
 #T = 1833.5
-V = 2.02
+V = 5
 
 a = 0.01
 b = 0.01
@@ -48,7 +51,7 @@ cdhs_e = []
 ll = 0
 for i in range(0, 19):
     ll = ll + 0.05
-    ul = ll + 7
+    ul = ll + 0.05
     a, b, r, c = sga(r, a, b, R, D, ul)
     alpha.append(a)
     beta.append(b)
@@ -60,7 +63,7 @@ r = 0.005
 ll = 0
 for i in range(0, 19):
     ll = ll + 0.05
-    ul = ll + 7
+    ul = ll + 0.05
     g, d, r, c = sga(r, g, d, R, D, ul)
     gamma.append(g)
     delta.append(d)
