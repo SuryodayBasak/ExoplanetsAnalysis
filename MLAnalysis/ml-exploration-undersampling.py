@@ -3,7 +3,13 @@ import csv
 import numpy as np
 import pandas as pd
 import retrieveHECData
+from sklearn.svm import SVC
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+
 np.set_printoptions(precision=2)
 
 def conf_matrix_inc(mat, orig_lbls, pred_lbls):
@@ -24,9 +30,18 @@ def conf_matrix_probs(mat):
 
     return mat
 
+# Here is the list of algorithms we will use.
+algorithms = {
+    'Support Vector Machine': SVC()
+    'Gaussian Naive Bayes': GaussianNB(),
+    'K Nearest Neighbors': KNeighborsClassifier(),
+    'Decision Trees': DecisionTreeClassifier(),
+    'Random Forests': RandomForestClassifier()
+}
+
 # Here we specify the iterations. Lower it to test initially.
-O_ITER = 10 # Outer iteration reshuffles the 1000 non hab.
-I_ITER = 10 # Inner iteration resplits the train and test sets.
+O_ITER = 5 # Outer iteration reshuffles the 1000 non hab.
+I_ITER = 5 # Inner iteration resplits the train and test sets.
 
 #Retrieving data from PHL-HEC
 data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
@@ -39,51 +54,51 @@ sample_nh = data_nh[split_idx]
 #confusion matrix initialized
 conf_mat = np.zeros((3, 3))
 
-for i in range(0, O_ITER):
-    for j in range(0, I_ITER):
+for algo, clf in algorithms.items():
+    for i in range(0, O_ITER):
+        for j in range(0, I_ITER):
 
-        #Indexes for splitting into training and testing sets
-        split_nh = np.random.rand(len(sample_nh)) < 0.8
-        split_p = np.random.rand(len(data_p)) < 0.8
-        split_m = np.random.rand(len(data_m)) < 0.8
+            #Indexes for splitting into training and testing sets
+            split_nh = np.random.rand(len(sample_nh)) < 0.8
+            split_p = np.random.rand(len(data_p)) < 0.8
+            split_m = np.random.rand(len(data_m)) < 0.8
 
-        #Extracting the training samples
-        train_nh = sample_nh[split_nh]
-        train_p = data_p[split_p]
-        train_m = data_m[split_m]
+            #Extracting the training samples
+            train_nh = sample_nh[split_nh]
+            train_p = data_p[split_p]
+            train_m = data_m[split_m]
 
-        #Generating the training labels
-        train_lbl_nh = [0 for x in range(len(train_nh))]
-        train_lbl_p = [1 for x in range(len(train_p))]
-        train_lbl_m = [2 for x in range(len(train_m))]
+            #Generating the training labels
+            train_lbl_nh = [0 for x in range(len(train_nh))]
+            train_lbl_p = [1 for x in range(len(train_p))]
+            train_lbl_m = [2 for x in range(len(train_m))]
 
-        #Extracting the test samples
-        test_nh = sample_nh[~split_nh]
-        test_p = data_p[~split_p]
-        test_m = data_m[~split_m]
+            #Extracting the test samples
+            test_nh = sample_nh[~split_nh]
+            test_p = data_p[~split_p]
+            test_m = data_m[~split_m]
 
-        #Generating the test labels
-        test_lbl_nh = [0 for x in range(len(test_nh))]
-        test_lbl_p = [1 for x in range(len(test_p))]
-        test_lbl_m = [2 for x in range(len(test_m))]
+            #Generating the test labels
+            test_lbl_nh = [0 for x in range(len(test_nh))]
+            test_lbl_p = [1 for x in range(len(test_p))]
+            test_lbl_m = [2 for x in range(len(test_m))]
 
-        #Generating training set and labels
-        train_frames = [train_nh, train_p, train_m]
-        train_x = pd.concat(train_frames, ignore_index=True)
-        train_y = train_lbl_nh + train_lbl_p + train_lbl_m
+            #Generating training set and labels
+            train_frames = [train_nh, train_p, train_m]
+            train_x = pd.concat(train_frames, ignore_index=True)
+            train_y = train_lbl_nh + train_lbl_p + train_lbl_m
 
-        #Generating test set and labels
-        test_frames = [test_nh, test_p, test_m]
-        test_x = pd.concat(test_frames, ignore_index=True)
-        test_y = test_lbl_nh + test_lbl_p + test_lbl_m
+            #Generating test set and labels
+            test_frames = [test_nh, test_p, test_m]
+            test_x = pd.concat(test_frames, ignore_index=True)
+            test_y = test_lbl_nh + test_lbl_p + test_lbl_m
 
-        #print(train_x)
-        clf = RandomForestClassifier()
-        clf.fit(train_x, train_y)
-        pred_labels = clf.predict(test_x)
+            #print(train_x)
+            clf.fit(train_x, train_y)
+            pred_labels = clf.predict(test_x)
 
-        #updating the confusion matrix
-        conf_matrix_inc(conf_mat, test_y, pred_labels)
+            #updating the confusion matrix
+            conf_matrix_inc(conf_mat, test_y, pred_labels)
 
-final_conf_mat = conf_matrix_probs(conf_mat)
-print(final_conf_mat)
+    final_conf_mat = conf_matrix_probs(conf_mat)
+    print(final_conf_mat)
