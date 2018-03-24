@@ -1,4 +1,3 @@
-P. Name
 P. Composition Class
 P. Habitable Class
 P. Min Mass (EU)

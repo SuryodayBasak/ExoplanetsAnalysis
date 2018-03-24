@@ -55,23 +55,13 @@ class HECDataFrame:
 	"""
 	def __init__(self, download_new_flag = 1):
 
-		#self.zoneClassDict = {'Hot':1.0, 'Warm':2.0, 'Cold':3.0}
-		#self.massClassDict = {'Mercurian':1.0, 'Subterran':2.0, 'Terran':3.0,
-		#'Superterran':4.0, 'Neptunian':5.0, 'Jovian':6.0}
-		#self.compClassDict = {'iron':1.0, 'rocky-iron':2.0, 'rocky-water':3.0,
-		#'gas':4.0, 'water-gas':5.0}
-		#self.atmoClassDict = {'none':1.0, 'metals-rich':2.0,
-		#'hydrogen-rich':3.0}
-
-		#Legacy map
-		self.zoneClassDict = {'Cold':1, 'Hot':2, 'Warm':3, None:0}
-		self.massClassDict = {'Jovian':1, 'Superterran':2, 'Neptunian':3,
-								'Terran':4, 'Mercurian':5, 'Subterran':6,
-								None:0}
-		self.compClassDict = {'gas':1, 'rocky-water':2, 'rocky-iron':3,
-								'water-gas':4, 'iron':5, None:0}
-		self.atmoClassDict = {'hydrogen-rich':1, 'metals-rich':2,
-								'no-atmosphere':3, None:0}
+		self.zoneClassDict = {'Hot':1.0, 'Warm':2.0, 'Cold':3.0}
+		self.massClassDict = {'Mercurian':1.0, 'Subterran':2.0, 'Terran':3.0,
+		'Superterran':4.0, 'Neptunian':5.0, 'Jovian':6.0}
+		self.compClassDict = {'iron':1.0, 'rocky-iron':2.0, 'rocky-water':3.0,
+		'gas':4.0, 'water-gas':5.0}
+		self.atmoClassDict = {'none':1.0, 'metals-rich':2.0,
+		'hydrogen-rich':3.0}
 
 		if download_new_flag != 1:
 			print("Skipping data download")
@@ -134,8 +124,8 @@ class HECDataFrame:
 		#.isin(['iron', 'rocky-iron', 'rocky-water'])]
 		self.rockyPlanetsDataFrame = self.data[self.data['P. Composition Class']
 		.isin(['iron', 'rocky-iron', 'rocky-water', 'gas', 'water-gas'])]
-		#self.rockyPlanetsDataFrame = self.rockyPlanetsDataFrame.drop(
-		#'P. Composition Class', axis=1)
+		self.rockyPlanetsDataFrame = self.rockyPlanetsDataFrame.drop(
+		'P. Composition Class', axis=1)
 		try:
 			self.rockyPlanetsDataFrame['P. Zone Class'] =  self.rockyPlanetsDataFrame['P. Zone Class'].map(self.zoneClassDict)
 		except:
