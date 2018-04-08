@@ -107,19 +107,16 @@ for i in range(0, O_ITER):
 final_conf_mat = conf_matrix_probs(conf_mat)
 final_conf_mat = np.round_(final_conf_mat, decimals = 2)
 #LaTeX Dump
-print(' & Non Habitable &',  final_conf_mat[0, 0],
-                            '&', final_conf_mat[0, 1],
-                            '&', final_conf_mat[0, 2],
-                            '\\\\')
+print(' & N &',  final_conf_mat[0, 0],
+                '&', final_conf_mat[0, 1],
+                '&', final_conf_mat[0, 2], '\\\\')
 
-print('GBDT & Psychroplanets &',  final_conf_mat[1, 0],
-                            '&', final_conf_mat[1, 1],
-                            '&', final_conf_mat[1, 2],
-                            '\\\\')
+print('GBDT & P &',  final_conf_mat[1, 0],
+                    '&', final_conf_mat[1, 1],
+                    '&', final_conf_mat[1, 2], '\\\\')
 
 print(' & Mesoplanets &',  final_conf_mat[2, 0],
                             '&', final_conf_mat[2, 1],
-                            '&', final_conf_mat[2, 2],
-                            '\\\\')
+                            '&', final_conf_mat[2, 2], '\\\\')
 
 print('\hline')

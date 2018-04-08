@@ -42,8 +42,8 @@ algorithms = {
 }
 
 # Here we specify the iterations. Lower it to test initially.
-O_ITER = 7 # Outer iteration reshuffles the 1000 non hab.
-I_ITER = 7 # Inner iteration resplits the train and test sets.
+O_ITER = 10 # Outer iteration reshuffles the 1000 non hab.
+I_ITER = 10 # Inner iteration resplits the train and test sets.
 
 #Retrieving data from PHL-HEC
 data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)

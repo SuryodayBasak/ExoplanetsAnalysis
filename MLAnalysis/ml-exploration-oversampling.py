@@ -19,7 +19,8 @@ def read_kde_data():
 	print('Collecting list of features.')
     #with open('featuresUsedExcTemp.txt') as fp:
     #with open('featuresUsedmr.txt') as fp:
-	with open('featuresUsed.txt') as fp:
+	#with open('featuresUsed.txt') as fp:
+	with open('featuresUsedmr.txt') as fp:
 		for line in fp:
 			feature_names.append(line[:-1])
 	return feature_names
@@ -54,8 +55,8 @@ algorithms = {
 }
 
 # Here we specify the iterations. Lower it to test initially.
-O_ITER = 5 # Outer iteration reshuffles the 1000 non hab.
-I_ITER = 5 # Inner iteration resplits the train and test sets.
+O_ITER = 10 # Outer iteration reshuffles the 1000 non hab.
+I_ITER = 10 # Inner iteration resplits the train and test sets.
 
 #Retrieving data from PHL-HEC
 data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
@@ -104,9 +105,9 @@ for algo, clf in algorithms.items():
         for j in range(0, I_ITER):
 
             #Indexes for splitting into training and testing sets
-            split_nh = np.random.rand(len(sample_nh)) < 0.7
-            split_p = np.random.rand(len(syn_p)) < 0.7
-            split_m = np.random.rand(len(syn_m)) < 0.7
+            split_nh = np.random.rand(len(sample_nh)) < 0.8
+            split_p = np.random.rand(len(syn_p)) < 0.8
+            split_m = np.random.rand(len(syn_m)) < 0.8
 
             #Extracting the training samples
             train_nh = sample_nh[split_nh]

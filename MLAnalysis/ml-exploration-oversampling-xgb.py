@@ -7,6 +7,17 @@ import xgboost as xgb
 
 np.set_printoptions(precision=2)
 
+def read_kde_data():
+	feature_names = []
+	print('Collecting list of features.')
+    #with open('featuresUsedExcTemp.txt') as fp:
+    #with open('featuresUsedmr.txt') as fp:
+	#with open('featuresUsed.txt') as fp:
+	with open('featuresUsedmr.txt') as fp:
+		for line in fp:
+			feature_names.append(line[:-1])
+	return feature_names
+
 def conf_matrix_inc(mat, orig_lbls, pred_lbls):
     if len(orig_lbls) != len(pred_lbls):
         print('Shapes of lists of labels do not match')
@@ -34,6 +45,37 @@ data_object = retrieveHECData.HECDataFrame(download_new_flag = 0)
 data_object.populatePreprocessedData()
 data_nh, data_p, data_m = data_object.returnAllSamples()
 
+f_list = read_kde_data()
+#print(features_list)
+
+#syn_path='../../data/ExoplanetsSyntheticData-master/parzen_window_estimation.csv'
+syn_path='../../data/ExoplanetsSyntheticData-master/distribution_assumption.csv'
+syn_df = pd.read_csv(syn_path)
+syn_labels = syn_df['P. Habitable Class']
+syn_df = syn_df[f_list]
+
+syn_p = syn_df.loc[syn_df['P. Habitable Class'] == 2]
+syn_p.drop(['P. Habitable Class'], axis = 1, inplace = True)
+#print(syn_p)
+
+syn_m = syn_df.loc[syn_df['P. Habitable Class'] == 3]
+syn_m.drop(['P. Habitable Class'], axis = 1, inplace = True)
+#print(syn_m)
+
+#print(data_nh)
+#print(syn_labels)
+#syn_df = pd.read_csv(syn_path, skipinitialspace=True)
+#syn_fl = list(syn_df.columns.values)
+#print(syn_fl)
+
+#for val in features_list:
+#    if val not in syn_fl:
+#        print("Bazooka", val)
+
+print(data_nh.shape)
+print(syn_p.shape)
+print(syn_m.shape)
+
 #confusion matrix initialized
 conf_mat = np.zeros((3, 3))
 
@@ -44,13 +86,13 @@ for i in range(0, O_ITER):
 
         #Indexes for splitting into training and testing sets
         split_nh = np.random.rand(len(sample_nh)) < 0.8
-        split_p = np.random.rand(len(data_p)) < 0.8
-        split_m = np.random.rand(len(data_m)) < 0.8
+        split_p = np.random.rand(len(syn_p)) < 0.8
+        split_m = np.random.rand(len(syn_m)) < 0.8
 
         #Extracting the training samples
         train_nh = sample_nh[split_nh]
-        train_p = data_p[split_p]
-        train_m = data_m[split_m]
+        train_p = syn_p[split_p]
+        train_m = syn_m[split_m]
 
         #Generating the training labels
         train_lbl_nh = [0 for x in range(len(train_nh))]
@@ -59,8 +101,8 @@ for i in range(0, O_ITER):
 
         #Extracting the test samples
         test_nh = sample_nh[~split_nh]
-        test_p = data_p[~split_p]
-        test_m = data_m[~split_m]
+        test_p = syn_p[~split_p]
+        test_m = syn_m[~split_m]
 
         #Generating the test labels
         test_lbl_nh = [0 for x in range(len(test_nh))]
