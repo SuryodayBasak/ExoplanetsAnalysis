@@ -55,10 +55,11 @@ data_nh, data_p, data_m = data_object.returnAllSamples()
 for algo, clf in algorithms.items():
     conf_mat = np.zeros((3, 3))
     for i in range(0, O_ITER):
-        split_idx = np.random.rand(len(data_nh)) < 0.05
+        #split_idx = np.random.rand(len(data_nh)) < 0.05
+        split_idx = np.random.rand(len(data_nh)) <= 1
         sample_nh = data_nh[split_idx]
         for j in range(0, I_ITER):
-
+            #print(algo)
             #Indexes for splitting into training and testing sets
             split_nh = np.random.rand(len(sample_nh)) < 0.8
             split_p = np.random.rand(len(data_p)) < 0.8
