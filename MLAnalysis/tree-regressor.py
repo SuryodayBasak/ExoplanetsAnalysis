@@ -2,11 +2,9 @@
 classify.py - Run all algorithms on the habitability data set given
 that nonhabitable planets are in a different file from the other
 classes.
-
 Inner iterations are parallelized across 4 workers. Keep TOTAL_INN to a
 multiple of 4 since the actual number of iterations performed is,
     => (TOTAL_INN // 4) * 4
-
 '''
 
 import sys
@@ -80,5 +78,4 @@ train_lbls = list(train['P. Ts Mean (K)'])
 test_lbls = list(test['P. Ts Mean (K)'])
 train = train.drop(['P. Ts Mean (K)'], axis = 1)
 test = test.drop(['P. Ts Mean (K)'], axis = 1)
-
 print(test)
